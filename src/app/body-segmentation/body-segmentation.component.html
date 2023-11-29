@@ -1,0 +1,51 @@
+<div class="flex justify-center">
+  <button [ngClass]="{ active: viewMode === 'image' }" (click)="setViewMode('image')"
+    class="btn rounded-l-lg">Image</button>
+  <button [ngClass]="{ active: viewMode === 'webcam' }" (click)="setViewMode('webcam')"
+    class="btn rounded-r-lg">Webcam</button>
+</div>
+
+<section id="demos" class="flex flex-col items-center" *ngIf="bodySegmentationService.isReady$ | async; else loading">
+  <ng-container *ngIf="viewMode === 'image'">
+    <h2 class="my-8 text-center text-3xl">Body part segmentation in images</h2>
+    <p class="my-8 text-center w-2/3">
+      Click on an image below (the first click may take a second to warm up) to try and recognize any humans in the
+      image using the power of Machine Learning!
+      Notice how we can understand the different parts of the body as shown by the different colours in the mask. Very
+      useful.
+    </p>
+    <div class="flex justify-around">
+      <div class="sample-image relative pb-2/3 flex-1" *ngFor="let imgSrc of sampleImages; let i = index">
+        <img class="object-contain h-96 w-full px-4" [src]="imgSrc" crossorigin="anonymous"
+          (click)="onImageClick($event, i)" />
+        <span *ngIf="!segmentations[i]" class="text-center text-xl">Click to identify human body</span>
+        <canvas #imageCanvas></canvas>
+      </div>
+    </div>
+  </ng-container>
+
+  <ng-container *ngIf="viewMode === 'webcam'">
+    <h2 class="my-8 text-center text-3xl">Webcam continuous classification</h2>
+    <p class="my-8 text-center w-2/3">
+      Try this out using your webcam. Stand a few feet away from your webcam for a nice full body shot and see the
+      results in real time!
+      Note, you must be on <a href="https://glitch.com/~tensorflow-js-body-segmentation">the https version of the
+        website</a> for this to work.
+      When ready click "enable webcam" below and accept access to the webcam when the browser asks (check the top
+      left of your window)
+    </p>
+
+    <div class="w-full h-full flex flex-col items-center">
+      <span *ngIf="!hasGetUserMedia()" class="text-center text-3xl">Webcam is not supported by your browser</span>
+      <button *ngIf="hasGetUserMedia() && !videoRenderCanvas" class="btn" (click)="enableCam()">Enable Webcam</button>
+      <div class="webcam relative pb-2/3 flex-1">
+        <video #webcam class="object-contain h-96" autoplay></video>
+        <canvas #webcamCanvas class="overlay"></canvas>
+      </div>
+    </div>
+  </ng-container>
+</section>
+
+<ng-template #loading>
+  <div class="my-8 text-center text-3xl">Loading the Machine Learning model...</div>
+</ng-template>

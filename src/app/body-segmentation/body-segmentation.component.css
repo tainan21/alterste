@@ -1,0 +1,49 @@
+:host {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.sample-image {
+  z-index: 0;
+}
+
+.sample-image:hover img {
+  opacity: 0.3;
+}
+
+.sample-image span,
+.webcam span {
+  transition: 0.5s ease;
+  opacity: 0;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  -ms-transform: translate(-50%, -50%);
+  pointer-events: none;
+}
+
+.sample-image:hover span {
+  opacity: 1;
+}
+
+.sample-image canvas,
+.webcam canvas.overlay {
+  opacity: 0.66;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 2;
+}
+
+.webcam {
+  cursor: pointer;
+}
+
+.webcam video {
+  clear: both;
+  display: block;
+  width: 640px;
+  height: 480px;
+}
